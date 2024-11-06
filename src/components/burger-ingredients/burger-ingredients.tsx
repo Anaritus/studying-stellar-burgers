@@ -3,14 +3,11 @@ import { useInView } from 'react-intersection-observer';
 
 import { TIngredient, TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import { useDispatch, useSelector } from '../../services/store';
-import { getIngredients, getIngredientsSelector } from '@slices';
-import { Preloader } from '../ui/preloader';
+import { useSelector } from '@selectors';
+import { getIngredientsSelector } from '@slices';
 
 export const BurgerIngredients: FC = () => {
-  /** TODO: взять переменные из стора */
-  const { data, loading, error } = useSelector(getIngredientsSelector);
-  const dispatch = useDispatch();
+  const { data } = useSelector(getIngredientsSelector);
   const buns: TIngredient[] = data.filter((item) => item.type === 'bun');
   const mains: TIngredient[] = data.filter((item) => item.type === 'main');
   const sauces: TIngredient[] = data.filter((item) => item.type === 'sauce');
@@ -40,12 +37,7 @@ export const BurgerIngredients: FC = () => {
     } else if (inViewFilling) {
       setCurrentTab('main');
     }
-    // dispatch(getIngredients());
   }, [inViewBuns, inViewFilling, inViewSauces]);
-
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, []);
 
   const onTabClick = (tab: string) => {
     setCurrentTab(tab as TTabMode);
@@ -56,14 +48,6 @@ export const BurgerIngredients: FC = () => {
     if (tab === 'sauce')
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  if (loading) {
-    return <Preloader />;
-  }
-
-  if (!loading && error) {
-    return <p>Не удалось получить список ингредиентов. Ошибка: {error}</p>;
-  }
 
   return (
     <BurgerIngredientsUI

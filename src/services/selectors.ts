@@ -1,5 +1,5 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { ingredientsReducer, rootReducer } from '@slices';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { rootReducer } from '@slices';
 
 import {
   UseSelector,
@@ -8,11 +8,11 @@ import {
 } from 'react-redux';
 
 export const store = configureStore({
-  reducer: { ingredients: ingredientsReducer },
+  reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production'
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
 
